@@ -1,0 +1,70 @@
+map
+2000 0.2
+count
+real	0m43.911s
+user	0m43.814s
+sys	0m0.074s
+
+find
+real	0m50.256s
+user	0m50.141s
+sys	0m0.084s
+------------------
+2000 0.7
+count
+real	9m1.834s
+user	9m1.025s
+sys	0m0.524s
+
+find
+real	10m17.961s
+user	10m16.844s
+sys	0m0.605s
+------------------
+------------------
+set
+2000 0.2
+count
+real	0m35.941s
+user	0m35.851s
+sys	0m0.066s
+
+find
+real	0m43.691s
+user	0m43.597s
+sys	0m0.065s
+------------------
+2000 0.7
+count
+real	8m24.650s
+user	8m13.821s
+sys	0m1.875s
+
+find
+real	9m2.344s
+user	9m1.066s
+sys	0m0.573s
+-----------------
+-----------------
+set
+2000 0.2
+count2
+real	0m32.892s
+user	0m32.808s
+sys	0m0.062s
+
+find2
+real	0m37.295s
+user	0m37.204s
+sys	0m0.066s
+-----------------
+2000 0.7
+count2
+real	6m38.218s
+user	6m37.574s
+sys	0m0.391s
+
+find2
+real	7m41.472s
+user	7m40.782s
+sys	0m0.436s
