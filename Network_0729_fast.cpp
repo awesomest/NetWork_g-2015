@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <map>
 #include <set>
+#include <cstdio>
 using namespace std;
 #define NEIGHBER_TYPE set<int>
 //+++++++++++++++++++++++++++プロトタイプ宣言+++++++++++++++++++++++++++
@@ -240,7 +241,7 @@ public:
 int main(void){
 	int v,e;
 	cout << "頂点数と辺の数を入力してください(m_n)" << endl;
-	cin >> v >> e;
+	scanf("%d%d", &v, &e);
 	NETWORK net(v,e);//頂点数v,枝数eのネットワークを生成
 	//net.show_vertex();
 	//++++++++++++++++++++++++++情報入力及び枝張り++++++++++++++++++++++++++++++
@@ -248,7 +249,7 @@ int main(void){
 	while(e > 0)
 	{
 		int v1,v2;
-		cin >> v1 >> v2;
+		scanf("%d%d", &v1, &v2);
 		if(v1 == v2)
 		{
 			cout << "自己ループになっています 別の組み合わせを入力してください" << endl;
