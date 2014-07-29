@@ -68,3 +68,13 @@ find2
 real	7m41.472s
 user	7m40.782s
 sys	0m0.436s
+
+-----------------
+-----------------
+set
+count2
+cin を scanf
+2000 0.7
+real	6m32.857s
+user	6m32.359s
+sys	0m0.371s
