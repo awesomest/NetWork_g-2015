@@ -1,27 +1,29 @@
-#include<iostream>
-#include<fstream>
-#include<vector>
-#include<ctime>
-#include<cstdlib>
-#include<cstring>
-#include<queue>
-#include<algorithm>
-#include<map>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <cstring>
+#include <queue>
+#include <algorithm>
+#include <map>
+#include <set>
+#include <random>
 
-#define networkSize 1000000
-#define useNetworkData 100
-#define existData 1000
-#define spreadCount 100
-#define read 1
-#define write 2
-#define desc 1
-#define asc 2
+#define NETWORKSIZE 1000000
+#define USENETWORKDATA 100
+#define EXISTDATA 1000
+#define SPREADCOUNT 100
+#define READ 1
+#define WRITE 2
+#define DESC 1
+#define ASC 2
 
 using namespace std;
 
-vector<vector<int> > network(networkSize);
-bool informReceived[networkSize];
-int degree[networkSize];
+vector<vector<int> > network(NETWORKSIZE);
+bool informReceived[NETWORKSIZE];
+int degree[NETWORKSIZE];
 
 struct TransferInform
 { int source,target; };
@@ -29,10 +31,10 @@ struct TransferInform
 struct NodeInform
 { int node,degree; };
 
-bool degree_asc(NodeInform n1,NodeInform n2)
+bool degree_ASC(NodeInform n1,NodeInform n2)
 { return n1.degree<n2.degree; }
 
-bool degree_desc(NodeInform n1,NodeInform n2)
+bool degree_DESC(NodeInform n1,NodeInform n2)
 { return n1.degree>n2.degree; }
 
 string fileName(int i,int type,string name="",int digit=10)
@@ -46,7 +48,7 @@ string fileName(int i,int type,string name="",int digit=10)
 		i/=digit;
 	}
 
-	if(type==write)
+	if(type==WRITE)
 		return name+"_time"+No+".dat";
 	else
 		return "data"+No+".dat";
@@ -54,16 +56,16 @@ string fileName(int i,int type,string name="",int digit=10)
 
 void rebuildNetwork(int No)
 {
-	ifstream readFile;
+	ifstream READFile;
 	int node1,node2;
 
 	memset(degree,0,sizeof(degree));
 
-	for(int i=0;i<networkSize;i++)
+	for(int i=0;i<NETWORKSIZE;i++)
 		network[i].clear();
 
-	readFile.open(fileName(No,read).c_str());
-	while(readFile>>node1>>node2)
+	READFile.open(fileName(No,READ).c_str());
+	while(READFile>>node1>>node2)
 	{
 		network[node1].push_back(node2);
 		network[node2].push_back(node1);
@@ -71,7 +73,7 @@ void rebuildNetwork(int No)
 		degree[node2]++;
 	}
 
-	readFile.close();
+	READFile.close();
 }
 
 double totalInverseWeight(vector<vector<int> > &edge,int source)
@@ -83,13 +85,13 @@ double totalInverseWeight(vector<vector<int> > &edge,int source)
 	return weight;
 }
 
-void noControlSpread(int source,int No)
+void noControlSpREAD(int source,int No)
 {
 	//ファイルを作り
 	ofstream writeFile;
-	writeFile.open(fileName(No,write,"NC").c_str());
+	writeFile.open(fileName(No,WRITE,"NC").c_str());
 
-	vector<vector<int> > edge(networkSize);
+	vector<vector<int> > edge(NETWORKSIZE);
 	vector<TransferInform> transferList;
 	TransferInform transfer;
 	int target,sumInformReceived=1,times=0;
@@ -98,7 +100,7 @@ void noControlSpread(int source,int No)
 	memset(informReceived,0,sizeof(informReceived));
 
 	//edgeの初期化
-	for(int node=0;node<networkSize;node++)
+	for(int node=0;node<NETWORKSIZE;node++)
 		copy(network[node].begin(),network[node].end(),back_inserter(edge[node]));
 
 	queue<int> sourceList;
@@ -106,12 +108,12 @@ void noControlSpread(int source,int No)
 	informReceived[source]=1;
 
 	//情報の拡散
-	while(sumInformReceived!=networkSize)
+	while(sumInformReceived!=NETWORKSIZE)
 	{
-		int informSpreadSource=sourceList.size();
+		int informSpREADSource=sourceList.size();
 		times++;
 
-		while(informSpreadSource--)
+		while(informSpREADSource--)
 		{
 			source=sourceList.front(); sourceList.pop(); 
 
@@ -135,12 +137,6 @@ void noControlSpread(int source,int No)
 		}
 
 		//情報を送ってもらったnodeを再び送らないように
-		/*****************
-			このfor文はいらないのでは？
-			Inverse Controllのプログラムの名残？
-			あとで考える
-		*****************/
-
 		for(int i=0;i<transferList.size();i++)
 		{
 			vector<int>::iterator v=find(edge[transferList[i].target].begin(),edge[transferList[i].target].end(),transferList[i].source);
@@ -158,13 +154,13 @@ void noControlSpread(int source,int No)
 	writeFile.close();
 }
 
-void inverseControlSpread(int source,int No)
+void inverseControlSpREAD(int source,int No)
 {
 	//ファイルを作り
 	ofstream writeFile;
-	writeFile.open(fileName(No,write,"IC").c_str());
+	writeFile.open(fileName(No,WRITE,"IC").c_str());
 
-	vector<vector<int> > edge(networkSize);
+	vector<vector<int> > edge(NETWORKSIZE);
 	vector<double> targetSelect;
 	vector<TransferInform> transferList;
 	TransferInform transfer;
@@ -174,7 +170,7 @@ void inverseControlSpread(int source,int No)
 	memset(informReceived,0,sizeof(informReceived));
 
 	//edgeの初期化
-	for(int node=0;node<networkSize;node++)
+	for(int node=0;node<NETWORKSIZE;node++)
 		copy(network[node].begin(),network[node].end(),back_inserter(edge[node]));
 
 	queue<int> sourceList;
@@ -182,11 +178,11 @@ void inverseControlSpread(int source,int No)
 	informReceived[source]=1;
 
 	//情報の拡散
-	while(sumInformReceived!=networkSize)
+	while(sumInformReceived!=NETWORKSIZE)
 	{
-		int informSpreadSource=sourceList.size();
+		int informSpREADSource=sourceList.size();
 		times++;
-		while(informSpreadSource--)
+		while(informSpREADSource--)
 		{
 			source=sourceList.front(); sourceList.pop();
 			if(!edge[source].size())
@@ -256,17 +252,17 @@ void inverseControlSpread(int source,int No)
 	writeFile.close();
 }
 
-void degreeControlSpread(int source,int method,int No)
+void degreeControlSpREAD(int source,int method,int No)
 {
 	//ファイルを作り
 	ofstream writeFile;
 
-	if(method==desc) 
-		writeFile.open(fileName(No,write,"DC_desc").c_str());
+	if(method==DESC) 
+		writeFile.open(fileName(No,WRITE,"DC_DESC").c_str());
 	else
-		writeFile.open(fileName(No,write,"DC_asc").c_str());
+		writeFile.open(fileName(No,WRITE,"DC_ASC").c_str());
 
-	vector<vector<NodeInform> > edge(networkSize);
+	vector<vector<NodeInform> > edge(NETWORKSIZE);
 	vector<TransferInform> transferList;
 	TransferInform transfer;
 	int target,neighbor,sumInformReceived=1,times=0;
@@ -275,7 +271,7 @@ void degreeControlSpread(int source,int method,int No)
 	memset(informReceived,0,sizeof(informReceived));
 
 	//edgeの初期化
-	for(int i=0;i<networkSize;i++)
+	for(int i=0;i<NETWORKSIZE;i++)
 	{
 		edge[i].resize(network[i].size());
 
@@ -286,16 +282,16 @@ void degreeControlSpread(int source,int method,int No)
 		}
 	}
 
-	//descかascのソート
-	if(method==desc)
+	//DESCかASCのソート
+	if(method==DESC)
 	{
-		for(int i=0;i<networkSize;i++)
-			sort(edge[i].begin(),edge[i].end(),degree_desc);
+		for(int i=0;i<NETWORKSIZE;i++)
+			sort(edge[i].begin(),edge[i].end(),degree_DESC);
 	}
 	else
 	{
-		for(int i=0;i<networkSize;i++)
-			sort(edge[i].begin(),edge[i].end(),degree_asc);
+		for(int i=0;i<NETWORKSIZE;i++)
+			sort(edge[i].begin(),edge[i].end(),degree_ASC);
 	}
 
 	queue<int> sourceList;
@@ -303,11 +299,11 @@ void degreeControlSpread(int source,int method,int No)
 	informReceived[source]=1;
 
 	//情報の拡散
-	while(sumInformReceived!=networkSize)
+	while(sumInformReceived!=NETWORKSIZE)
 	{
-		int informSpreadSource=sourceList.size();
+		int informSpREADSource=sourceList.size();
 		times++;
-		while(informSpreadSource--)
+		while(informSpREADSource--)
 		{
 			source=sourceList.front(); sourceList.pop();
 
@@ -359,60 +355,59 @@ void degreeControlSpread(int source,int method,int No)
 int main()
 {
 	srand(time(NULL));
-	vector<int> firstSource,useData;
+	set<int> firstSource,useData;
 	int count=1;
 	ofstream writeFile;
 	writeFile.open("network and first source list.txt");
 
 	//使うnetworkのデータをラダンムで選び
-	for(int i=0,number;i<useNetworkData;i++) 
+	while(useData.size()<USENETWORKDATA)
 	{ 
-		do
-		{
-			number=(rand()%existData)+1;
-		}while(find(useData.begin(),useData.end(),number)!=useData.end());
+		int number=(rand()%EXISTDATA)+1;
 
-		useData.push_back(number);
+		useData.insert(number);
 	}
 
+	// 修正済み
 	/*******************************
 		使うネットワークも100個の情報源も
 		setに入れて重複を防ぐ
 	 *******************************/
 
 	// 100個のネットワークに対して
-	for(int i=0;i<useNetworkData;i++)
+	set<int>::iterator it = useData.begin();
+	for( ; it!=useData.end(); it++)
 	{
 		firstSource.clear();
-		rebuildNetwork(useData[i]);
+		rebuildNetwork(*it);
 
-		writeFile<<useData[i]<<endl; //使ったnetworkのデータを記録
+		writeFile << *it << endl; //使ったnetworkのデータを記録
 
 		//最初のsourceをランダムで選び
 		// 各ネットワークに100個ずつの情報源を与える
-		for(int j=0,node=0;j<spreadCount;j++)
+		while(firstSource.size()<SPREADCOUNT)
 		{
-			do
-			{
-				node=rand()%networkSize;
-			}while(find(firstSource.begin(),firstSource.end(),node)!=firstSource.end());
+			int node=rand()%NETWORKSIZE;
 
-			firstSource.push_back(node);
-			writeFile<<node<<" "; //選ばれたsourceを記録
+			if (!firstSource.count(node)){
+				firstSource.insert(node);
+				writeFile << node << " "; //選ばれたsourceを記録
+			}
 		}
 
 		writeFile<<endl;
 
-		for(int j=0;j<spreadCount;j++,count++)
+		set<int>::iterator ite = firstSource.begin();
+		for(int j=0;j<SPREADCOUNT;j++,count++,ite++)
 		{
 			srand(j+1);
-			noControlSpread(firstSource[j],count); //近傍nodeをrandomで選び
+			noControlSpREAD(*ite,count); //近傍nodeをrandomで選び
 			srand(j+1);
-			inverseControlSpread(firstSource[j],count); //確率で次数が小さい近傍nodeを選ぴ安いように
+			inverseControlSpREAD(*ite,count); //確率で次数が小さい近傍nodeを選ぴ安いように
 			srand(j+1);
-			degreeControlSpread(firstSource[j],desc,count); //近傍nodeの次数個数を降順で選び
+			degreeControlSpREAD(*ite,DESC,count); //近傍nodeの次数個数を降順で選び
 			srand(j+1);
-			degreeControlSpread(firstSource[j],asc,count); //近傍nodeの次数個数を昇順で選び
+			degreeControlSpREAD(*ite,ASC,count); //近傍nodeの次数個数を昇順で選び
 		}
 	}
 
