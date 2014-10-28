@@ -111,9 +111,10 @@ bool is_selfloop(graph &G){
 //構造体からグラフが多重辺を持つか判定する
 bool is_multiple_edge(graph &G){
 	for(int i=0;i<G.vertex_num;i++){
+		if (G.V[i].edge.empty()) continue;
 		set<int>::iterator it = G.V[i].edge.begin();
 		while (1) {
-			// 頂点数１のときのここでエラー？
+			// 頂点数１のときここでエラー？
 			set<int>::iterator it_prev = it++;
 			if (it == G.V[i].edge.end()) break;
 			if (*it_prev == *it) return true;
