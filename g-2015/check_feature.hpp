@@ -1,73 +1,15 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <stdlib.h>
-#include <sstream>
-#include <set>
-#include <map>
-#include <time.h>
-#include <queue>
-using namespace std;
+#ifndef HEADER_CHECK_FEATURE
+#define HEADER_CHECK_FEATURE
 
-struct vertex{
-	int number,degree;
-	multiset<int> edge;
-};
+#include "init.hpp"
+#include "file_operation.hpp"
 
-struct graph{
-	int vertex_num,edge_num;
-	vector<vertex> V;
-};
+//------------------------------------
+//
+//ネットワークの特徴
+//
 
-//ファイルを指定
-string file_fullname(int number,string file_name,string extension){
-	ostringstream ost;
-	string file_number;
-	ost << number;
-	file_number = ost.str();
-	return file_name+"_"+file_number+"."+extension;
-}
-
-//ファイルの読み込み
-bool read_vertex(graph &G, string file_name, int number, string extension){
-	ifstream graph;
-
-	graph.open(file_fullname(number,file_name,extension).c_str());
-	//ファイルの読み込み（失敗）
-	if(graph.fail()){
-		cout<<"file open error"<<endl;
-		return false;
-	}
-
-	//ファイルの読み込み
-	//graph.open(file_fullname(number,file_name,extension).c_str());
-	int node,edge;
-	graph>>node>>edge;
-	G.vertex_num=node;
-	G.edge_num=edge;
-	for(int i=0;i<node;i++){
-		vertex a;
-		a.number=i;
-		a.degree=0;
-		G.V.push_back(a);
-	}
-
-	//ファイルの格納(頂点：頂点からの接続先)
-	for(int i=0;i<edge;i++){
-		int t, s;
-		graph>>t>>s;
-		G.V[t].edge.insert(s);
-		G.V[s].edge.insert(t);
-		G.V[t].degree++;
-		G.V[s].degree++;
-	}
-	graph.close();
-
-	return true;
-}
-
-//txtファイルからグラフが自己ループか判定するプログラム
+//グラフが自己ループか判定するプログラム
 bool is_selfloop(graph &G){
 	for(int i=0;i<G.V.size();i++){
 		if (G.V[i].edge.count(i)) return true;
@@ -197,3 +139,5 @@ bool degree_distributions(
 
 	return true;
 }
+
+#endif

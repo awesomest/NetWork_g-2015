@@ -1,5 +1,7 @@
 //【txtファイルから直径、半径、平均距離、を計算するプログラム】
-#include "network_g-2015.hpp"
+#include "init.hpp"
+#include "file_operation.hpp"
+#include "check_feature.hpp"
 
 /*コマンド引数で入力
 1:読み取るファイルのテンプレ
