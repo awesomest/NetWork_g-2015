@@ -105,6 +105,27 @@ void average_distance(
 	ave_dis /= (G.vertex_num * (G.vertex_num-1.0));
 }
 
+//クラスター係数
+double clasta(graph& G){
+	double clasta = 0;
+	int eff_ver = 0; //クラスタ係数の計算に有効な頂点の数
+	for(int i = 0; i < G.vertex_num; i++){
+		if(G.V[i].edge.size() <= 1) continue;
+		int tri = 0;
+		multiset<int>::iterator pm1 = G.V[i].edge.begin();
+		multiset<int>::iterator edgeEnd = G.V[i].edge.end();
+		for(; pm1 != edgeEnd; pm1++){
+			multiset<int>::iterator pm2 = pm1;
+			for(++pm2; pm2 != edgeEnd; pm2++){
+				if(G.V[*pm1].edge.count(*pm2)) tri++;
+			}
+		}
+		clasta += tri / (G.V[i].edge.size() * (G.V[i].edge.size() - 1.0) / 2.0);
+		eff_ver++;
+	}
+	return clasta / eff_ver;
+}
+
 //次数分布をプロットする用のファイル作成
 //成功したらtrueを返す
 bool degree_distributions(
