@@ -58,4 +58,40 @@ void make_BA(
 	graph.close();
 }
 
+//ランダムグラフ作成
+//成功したらtrue
+bool make_rand(
+	int num_file,		//ネットワークの番号
+	int N,				//総頂点数
+	double p,			//枝を張る確率
+	string file_name,	//出力ファイル名のテンプレ
+	string extension	//出力ファイル名の拡張子
+	)
+{
+	int edge = 0;
+	vector<int> v1, v2;
+	srand(time(NULL));
+	for(int i = 0; i < N; i++){
+		for(int j = i+1; j < N; j++){
+			double put = (double)rand() / RAND_MAX;
+			if(put < p){
+				v1.push_back(i);
+				v2.push_back(j);
+				edge++;
+			}
+		}
+	}
+
+	ofstream graph;
+	graph.open(file_fullname(num_file,file_name,extension).c_str());
+	if(graph.fail()) return false;
+
+	graph << N << " " << edge << endl;
+	for(int i = 0; i < edge; i++) graph << v1[i] << " " << v2[i] << endl;
+
+	graph.close();
+
+	return true;
+}
+
 #endif
