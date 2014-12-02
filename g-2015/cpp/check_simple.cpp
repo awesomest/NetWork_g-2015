@@ -1,7 +1,7 @@
 //【txtファイルから自己ループ・多重辺・非連結かをまとめて確認するプログラム】
-#include "init.hpp"
-#include "file_operation.hpp"
-#include "check_feature.hpp"
+#include "../init.hpp"
+#include "../file_operation.hpp"
+#include "../check_feature.hpp"
 
 /*コマンド引数で入力
 1:読み取るファイルのテンプレ
