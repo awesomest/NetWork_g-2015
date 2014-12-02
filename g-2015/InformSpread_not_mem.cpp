@@ -402,7 +402,7 @@ int main(int argc,char* argv[])
   set<int> firstSource,useData;//情報拡散の始点を格納,使うデータの番号を格納
   int count=0;//実験回数
   ofstream writeFile;//使ったデータと始点を書き込むファイルストリーム
-  sourcelist = "./informspread/" + DIRECTORYNEAME + "/network and first source list.txt";
+  sourcelist = "./informspread_not_mem/" + DIRECTORYNEAME + "/network and first source list.txt";
   writeFile.open(sourcelist.c_str());
   if(writeFile.fail()){cout << "error" << endl;return 0;}
   //使うnetworkのデータをランダムに選ぶ
@@ -410,6 +410,7 @@ int main(int argc,char* argv[])
     int number=(rand()%EXISTDATA);
     useData.insert(number);
   }
+
   //選んだデータの数だけ実験を行う
   set<int>::iterator udit = useData.begin();
   while(udit != useData.end())
