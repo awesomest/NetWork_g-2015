@@ -60,22 +60,24 @@ void rebuildNetwork(int No)
   free(degree);
   ifstream readFile;
   int node1,node2;
- 
+
   degree = (int*)calloc(NETWORKSIZE,sizeof(int));
   for(int i=0;i<NETWORKSIZE;i++)network[i].clear();
-  
+
   readFile.open(fileName(No,read,FILENAME,DIRECTORYNEAME).c_str());
   if(readFile.fail()){return;}//ファイル読み込みが失敗したら抜ける
   //ネットワーク生成
+  int a, b;
+  readFile >> a >> b;
   while(readFile>>node1>>node2)
     {
-      
+
       network[node1].insert(node2);
       network[node2].insert(node1);
       degree[node1]++;
       degree[node2]++;
     }
- 
+
   readFile.close();
 }
 
@@ -119,38 +121,38 @@ void noControlSpread(int source,int No)
   TransferInform transfer;
   mt19937_64 random_engine(No);
   int target,sumInformReceived=1,times=0;
-  
+
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
-  
+
   //edgeの初期化
   for(int node=0;node<NETWORKSIZE;node++)
     copy(network[node].begin(),network[node].end(),back_inserter(edge[node]));
-  
+
   queue<int> sourceList;
   sourceList.push(source);
   informReceived[source]=1;
   //情報の拡散
   while(sumInformReceived < NETWORKSIZE)
   {
-      
+
       int informSpreadSource=sourceList.size();
       times++;
       collision = 0;
       while(informSpreadSource--)
     	{
-        
-    	  source=sourceList.front(); sourceList.pop(); 
+
+    	  source=sourceList.front(); sourceList.pop();
     	  if(!edge[source].size()){dead_v++;continue;}
     	  double r = (double)random_engine()/(random_engine.max());
         int random = r * edge[source].size();
     	  target=edge[source][random];
     	  edge[source].erase(edge[source].begin() + random);
-        
+
     	  transfer.source=source;
     	  transfer.target=target;
     	  transferList.push_back(transfer);
-    	  
+
     	  sourceList.push(source);//行き場がある場合情報元はまた情報源となる
 
     	  if(!informReceived[target])
@@ -162,7 +164,7 @@ void noControlSpread(int source,int No)
             collision++;
         }
     	}
-      
+
       //情報を送ってもらったnodeを再び送らないように
       vector<TransferInform>::iterator TIit = transferList.begin();
       while(TIit !=transferList.end())
@@ -174,7 +176,7 @@ void noControlSpread(int source,int No)
         TIit++;
     	}
       transferList.clear();
-  
+
       writeFile<<times<<" "<<sumInformReceived<<endl;
       noise << times << " " << dead_v << " " << collision << endl;
   }
@@ -202,18 +204,18 @@ void inverseControlSpread(int source,int No)
   collision = 0;
 
   int target,sumInformReceived=1,times=0;
-  
+
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
-  
+
   //edgeの初期化
   for(int node=0;node<NETWORKSIZE;node++)
     copy(network[node].begin(),network[node].end(),inserter(edge[node],edge[node].begin()));
-  
+
   queue<int> sourceList;
   sourceList.push(source);
   informReceived[source]=1;
-  
+
   //情報の拡散
   while(sumInformReceived!=NETWORKSIZE)
     {
@@ -227,7 +229,7 @@ void inverseControlSpread(int source,int No)
           dead_v++;
     	    continue;
         }
-    	  else if(edge[source].size()==1) 
+    	  else if(edge[source].size()==1)
     	    {
     	      target=*(edge[source].begin());
     	      edge[source].clear();
@@ -248,7 +250,7 @@ void inverseControlSpread(int source,int No)
     	      for(set<int>::iterator nbit = edge[source].begin();nbit != edge[source].end();nbit++,neighbor++)
         		{
         		  weight+=targetSelect[neighbor];
-              
+
         		  if(weight>p)
         		  {
         		      target=*nbit;
@@ -260,11 +262,11 @@ void inverseControlSpread(int source,int No)
     	    }
       	  transfer.source=source;
       	  transfer.target=target;
-         
+
       	  transferList.push_back(transfer);
-      	  
+
       	  sourceList.push(source);
-      	  
+
       	  if(!informReceived[target])
       	    {
       	      informReceived[target]=1;
@@ -279,7 +281,7 @@ void inverseControlSpread(int source,int No)
       while(TIit != transferList.end())
     	{
     	  set<int>::iterator v = edge[TIit->target].find(TIit->source);
-    	  
+
     	  if(v!=edge[TIit->target].end()){
     	    edge[TIit->target].erase(v);
         }
@@ -312,18 +314,18 @@ void proportionControlSpread(int source,int No){
   collision = 0;
 
   int target,sumInformReceived=1,times=0;
-  
+
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
-  
+
   //edgeの初期化
   for(int node=0;node<NETWORKSIZE;node++)
     copy(network[node].begin(),network[node].end(),inserter(edge[node],edge[node].begin()));
-  
+
   queue<int> sourceList;
   sourceList.push(source);
   informReceived[source]=1;
-  
+
   //情報の拡散
   while(sumInformReceived!=NETWORKSIZE)
     {
@@ -337,7 +339,7 @@ void proportionControlSpread(int source,int No){
           dead_v++;
           continue;
         }
-        else if(edge[source].size()==1) 
+        else if(edge[source].size()==1)
           {
             target=*(edge[source].begin());
             edge[source].clear();
@@ -358,7 +360,7 @@ void proportionControlSpread(int source,int No){
             for(set<int>::iterator nbit = edge[source].begin();nbit != edge[source].end();nbit++,neighbor++)
             {
               weight+=targetSelect[neighbor];
-              
+
               if(weight>p)
               {
                   target=*nbit;
@@ -370,11 +372,11 @@ void proportionControlSpread(int source,int No){
           }
           transfer.source=source;
           transfer.target=target;
-         
+
           transferList.push_back(transfer);
-          
+
           sourceList.push(source);
-          
+
           if(!informReceived[target])
             {
               informReceived[target]=1;
@@ -389,7 +391,7 @@ void proportionControlSpread(int source,int No){
       while(TIit != transferList.end())
       {
         set<int>::iterator v = edge[TIit->target].find(TIit->source);
-        
+
         if(v!=edge[TIit->target].end()){
           edge[TIit->target].erase(v);
         }
@@ -427,7 +429,7 @@ void degreeControlSpread(int source,int method,int No)
   int collision,dead_v;
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
- 
+
   collision = 0;
   dead_v = 0;
 
@@ -435,7 +437,7 @@ void degreeControlSpread(int source,int method,int No)
   for(int i=0;i<NETWORKSIZE;i++)
   {
       edge[i].resize(network[i].size());
-      set<int>::iterator stit; 
+      set<int>::iterator stit;
       stit= network[i].begin();
       for(int j=0;stit != network[i].end();j++,stit++)
     	{
@@ -443,7 +445,7 @@ void degreeControlSpread(int source,int method,int No)
     	  edge[i][j].degree=degree[*stit];
     	}
   }
- 
+
   //descかascのソート
   if(method==desc)
   {
@@ -469,7 +471,7 @@ void degreeControlSpread(int source,int method,int No)
       while(informSpreadSource--)
     	{
     	  source=sourceList.front(); sourceList.pop();
-    	 
+
     	  if(!edge[source].size()){dead_v++;continue;}
 
     	  for(neighbor=1;neighbor<edge[source].size() && edge[source][neighbor].degree==edge[source][neighbor-1].degree;neighbor++);
@@ -477,13 +479,13 @@ void degreeControlSpread(int source,int method,int No)
     	  int select=rand()%neighbor;
     	  target=edge[source][select].node;
     	  edge[source].erase(edge[source].begin()+select);
-    	  
+
     	  transfer.source=source;
     	  transfer.target=target;
     	  transferList.push_back(transfer);
-    	  
+
     	  sourceList.push(source);
-        
+
     	  if(!informReceived[target])
     	    {
     	      sumInformReceived++;
@@ -506,9 +508,9 @@ void degreeControlSpread(int source,int method,int No)
         		break;
     	   }
     	}
-      
+
       transferList.clear();
-      
+
       writeFile<<times<<" "<<sumInformReceived<<endl;
       noise << times << " " << dead_v << " " << collision << endl;
     }
@@ -590,7 +592,7 @@ int main(int argc,char* argv[])
     	}
       udit++;
   }
-  
+
   free(degree);
   writeFile.close();
 }

@@ -59,22 +59,24 @@ void rebuildNetwork(int No)
   free(degree);
   ifstream readFile;
   int node1,node2;
- 
+
   degree = (int*)calloc(NETWORKSIZE,sizeof(int));
   for(int i=0;i<NETWORKSIZE;i++)network[i].clear();
-  
+
   readFile.open(fileName(No,read,FILENAME,DIRECTORYNEAME).c_str());
   if(readFile.fail()){cout << "can't read network" << endl;return;}//ファイル読み込みが失敗したら抜ける
   //ネットワーク生成
+  int a, b;
+  readFile >> a >> b;
   while(readFile>>node1>>node2)
     {
-      
+
       network[node1].push_back(node2);
       network[node2].push_back(node1);
       degree[node1]++;
       degree[node2]++;
     }
- 
+
   readFile.close();
 }
 
@@ -111,10 +113,10 @@ void noControlSpread(int source,int No)
   collision=0;
 
   //vector<vector<int> > edge(NETWORKSIZE);
-  
+
   mt19937_64 random_engine(No);//実験に使う乱数を生成
   int target,sumInformReceived=1,times=0;
-  
+
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
   dead = (bool*)calloc(NETWORKSIZE,sizeof(bool));
@@ -124,14 +126,14 @@ void noControlSpread(int source,int No)
   //情報の拡散
   while(sumInformReceived < NETWORKSIZE)
   {
-      
+
       int informSpreadSource=sourceList.size();
       times++;
       collision = 0;
       while(informSpreadSource--)
     	{
-        
-    	  source=sourceList.front(); sourceList.pop(); 
+
+    	  source=sourceList.front(); sourceList.pop();
         if(dead[source]){
           collision++;
           sourceList.push(source);
@@ -182,13 +184,13 @@ void inverseControlSpread(int source,int No)
   if(writeFile.fail())return;
   //vector<set<int> > edge(NETWORKSIZE);
   vector<double> targetSelect;
- 
+
   mt19937_64 random_engine(No);
   int collision;
   collision = 0;
 
   int target,sumInformReceived=1,times=0;
-  
+
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
   dead = (bool*)calloc(NETWORKSIZE,sizeof(bool));
@@ -220,7 +222,7 @@ void inverseControlSpread(int source,int No)
     	     	  //情報源の隣接点iが送り先に選択される確率を格納
               targetSelect.push_back((1.0/network[network[source][i]].size())/weight);
             }
-      
+
     	      double p=(double)random_engine()/(random_engine.max());
             //cout << "p = " << p << endl;
             weight = 0;
@@ -282,7 +284,7 @@ void proportionControlSpread(int source,int No){
   collision = 0;
 
   int target,sumInformReceived=1,times=0;
-  
+
   //情報獲得の確認用の配列を初期化
   informReceived = (bool*)calloc(NETWORKSIZE,sizeof(bool));
   dead = (bool*)calloc(NETWORKSIZE,sizeof(bool));
@@ -293,7 +295,7 @@ void proportionControlSpread(int source,int No){
   queue<int> sourceList;
   sourceList.push(source);
   informReceived[source]=1;
-  
+
   //情報の拡散
   while(sumInformReceived!=NETWORKSIZE)
     {
@@ -322,7 +324,7 @@ void proportionControlSpread(int source,int No){
             for(set<int>::iterator nbit = edge[source].begin();nbit != edge[source].end();nbit++,neighbor++)
             {
               weight+=targetSelect[neighbor];
-              
+
               if(weight>p)
               {
                   target=*nbit;
@@ -341,7 +343,7 @@ void proportionControlSpread(int source,int No){
             }
 
           //sourceList.push(source);
-          
+
           if(!informReceived[target])
             {
               informReceived[target]=1;
@@ -441,7 +443,7 @@ int main(int argc,char* argv[])
     	}
       udit++;
   }
-  
+
   free(degree);
   writeFile.close();
 }

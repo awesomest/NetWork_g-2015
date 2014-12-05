@@ -94,4 +94,63 @@ bool make_rand(
 	return true;
 }
 
+//ランダムな木のネットワーク
+bool make_random_tree(
+	int num_file,		//ネットワークの番号
+	int N,				//総頂点数
+	string file_name,	//出力ファイル名のテンプレ
+	string extension	//出力ファイル名の拡張子
+	)
+{
+	ofstream graph;
+	graph.open(file_fullname(num_file,file_name,extension).c_str());
+	if(graph.fail()) return false;
+
+	graph << N << " " << N-1 << endl;
+	graph << "0 1" << endl;
+	for(int i = 2; i < N; i++){
+		graph << i << " " << my_rand(i) << endl;
+	}
+
+	graph.close();
+
+	return true;
+}
+
+//次数が一様な木のネットワーク
+bool make_uniform_tree(
+	int num_file,		//ネットワークの番号
+	int N,				//総頂点数
+	int d,				//各頂点の次数
+	string file_name,	//出力ファイル名のテンプレ
+	string extension	//出力ファイル名の拡張子
+	)
+{
+	if(d < 2) return false;
+	ofstream graph;
+	graph.open(file_fullname(num_file,file_name,extension).c_str());
+	if(graph.fail()) return false;
+
+	graph << N << " " << N-1 << endl;
+	int n = 1;
+	int q = 0;
+	for(; n < d && n < N; n++){
+		graph << q << " " << n << endl;
+	}
+
+	while(1){
+		q++;
+		for(int i = 0; i < d-1; i++){
+			if(n >= N){
+				graph.close();
+				return true;
+			}
+			graph << q << " " << n << endl;
+			n++;
+		}
+	}
+
+	graph.close();
+	return false;
+}
 #endif
