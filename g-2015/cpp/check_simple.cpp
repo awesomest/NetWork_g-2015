@@ -1,14 +1,14 @@
 //【txtファイルから自己ループ・多重辺・非連結かをまとめて確認するプログラム】
-#include "../init.hpp"
-#include "../file_operation.hpp"
-#include "../check_feature.hpp"
+#include "../hpp/init.hpp"
+#include "../hpp/file_operation.hpp"
+#include "../hpp/check_feature.hpp"
 
 /*コマンド引数で入力
 1:読み取るファイルのテンプレ
 2:読み取るファイルの拡張子
 3:作成ファイル数の始まり
 4:作成ファイル数の終わり
- */
+*/
 
 int main(int argc,char *argv[]){
 	float count_self=0,count_multiple=0,count_connect=0;

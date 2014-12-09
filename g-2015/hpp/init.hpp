@@ -11,6 +11,11 @@
 #include <map>
 #include <time.h>
 #include <queue>
+#include <random>
+#include <algorithm>
+#include <numeric>
+#include <iterator>
+#include <sstream>
 using namespace std;
 
 struct vertex{
