@@ -16,6 +16,7 @@
 #include <numeric>
 #include <iterator>
 #include <sstream>
+#include <cstdlib>
 using namespace std;
 
 struct vertex{
