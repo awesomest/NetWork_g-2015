@@ -106,8 +106,8 @@ void noControlSpread(int source,int No)
 {
   //実験結果を書き込むファイルを作る
   ofstream writeFile,noise;
-  writeFile.open(fileName(No,write,"NC","./informspread_not_mem/"+DIRECTORYNEAME).c_str());
-  noise.open(fileName(No,write,"NC_noise","./informspread_not_mem/"+DIRECTORYNEAME).c_str());
+  writeFile.open(fileName(No,write,"NC","./informspread_not_mem/shuffle").c_str());
+  noise.open(fileName(No,write,"NC_noise","./"/informspread_not_mem/shuffle").c_str());
   if(writeFile.fail())return;
   int collision;//行き場を失った頂点の数,すでに伝播し終えた頂点に送った回数
   collision=0;
