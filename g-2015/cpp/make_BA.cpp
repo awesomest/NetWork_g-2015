@@ -1,7 +1,7 @@
 //【指定したファイル数、BAモデルでグラフを制作するプログラム】
-#include "../init.hpp"
-#include "../file_operation.hpp"
-#include "../make_network.hpp"
+#include "../hpp/init.hpp"
+#include "../hpp/file_operation.hpp"
+#include "../hpp/make_network.hpp"
 
 /*コマンド引数で入力
 1:完全グラフの頂点数
